@@ -32,28 +32,50 @@ namespace MediaOrganizer.Services
       return numberOfChanges == 1;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync<T>()
+    public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class, new()
     {
       var mediaTypes = (await _context.MediaTypes.Select(entity => new MediaTypeListItem
       {
+        Id = entity.Id,
         Title = entity.Title
       }).ToListAsync());
 
-      return (IEnumerable<T>)mediaTypes;
+      return mediaTypes as IEnumerable<T>;
     }
 
-    public async Task<MediaTypeDetail> GetByIdAsync<MediaTypeDetail>(int id)
+    public async Task<T> GetByIdAsync<T>(int id) where T : class, new()
     {
-      throw new NotImplementedException();
+      var entity = await _context.MediaTypes.FindAsync(id);
+      if (entity is null) return default;
+      MediaTypeDetail detail = new MediaTypeDetail
+      {
+        Id = entity.Id,
+        Title = entity.Title,
+        Description = entity.Description,
+      };
+      return detail as T;
     }
 
-    public async Task<bool> UpdateAsync<MediaTypeEdit>(MediaTypeEdit model)
+    public async Task<bool> UpdateAsync<T>(int id, T model)
     {
-      throw new NotImplementedException();
+      var entity = await _context.MediaTypes.FindAsync(id);
+      if (entity is null) return false;
+
+      MediaTypeEdit editModel = model as MediaTypeEdit;
+
+      entity.Title = editModel.Title;
+      entity.Description = editModel.Description;
+
+      var numberOfChanges = await _context.SaveChangesAsync();
+      return numberOfChanges == 1;
     }
     public async Task<bool> DeleteAsync(int id)
     {
-      throw new NotImplementedException();
+      var entity = await _context.MediaTypes.FindAsync(id);
+      if (entity is null) return false;
+
+      _context.MediaTypes.Remove(entity);
+      return await _context.SaveChangesAsync() == 1;
     }
   }
 }
