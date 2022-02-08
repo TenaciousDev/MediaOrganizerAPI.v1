@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaOrganizer.Data;
+using MediaOrganizer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,12 @@ namespace MediaOrganizer.WebAPI
     {
       var connectionString = Configuration.GetConnectionString("DefaultConnection");
       services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+      // use this if adding User Auth
+      // also install package Microsoft.AspNetCore.Http.Abstractions
+      // services.AddHttpContextAccessor();
+
+      services.AddScoped<IMediaService, MediaTypeService>();
 
       services.AddControllers();
       services.AddSwaggerGen(c =>
