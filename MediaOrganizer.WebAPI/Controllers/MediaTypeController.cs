@@ -14,9 +14,9 @@ namespace MediaOrganizer.WebAPI.Controllers
   public class MediaTypeController : ControllerBase
   {
     private readonly IMediaService _service;
-    public MediaTypeController(IMediaService service)
+    public MediaTypeController(ServiceResolver serviceAccessor)
     {
-      _service = service;
+      _service = serviceAccessor(nameof(MediaTypeService));
     }
 
     [HttpPost]

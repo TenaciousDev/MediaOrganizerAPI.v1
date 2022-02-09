@@ -14,4 +14,6 @@ namespace MediaOrganizer.Services
     Task<bool> UpdateAsync<T>(int id, T model);
     Task<bool> DeleteAsync(int id);
   }
+
+  public delegate IMediaService ServiceResolver(string key);
 }

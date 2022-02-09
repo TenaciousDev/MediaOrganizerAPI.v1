@@ -14,9 +14,9 @@ namespace MediaOrganizer.WebAPI.Controllers
   public class MediaObjectController : ControllerBase
   {
     private IMediaService _service;
-    public MediaObjectController(IMediaService service)
+    public MediaObjectController(ServiceResolver serviceAccessor)
     {
-      _service = service;
+      _service = serviceAccessor(nameof(MediaObjectService));
     }
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] MediaObjectCreate request)

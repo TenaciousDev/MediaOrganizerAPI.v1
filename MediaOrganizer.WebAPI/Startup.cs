@@ -36,9 +36,26 @@ namespace MediaOrganizer.WebAPI
       // also install package Microsoft.AspNetCore.Http.Abstractions
       // services.AddHttpContextAccessor();
 
-      services.AddTransient<IMediaService, MediaObjectService>();
-      services.AddTransient<IMediaService, MediaTypeService>();
-      // services.AddScoped<IMediaService, MediaCatalogService>();
+      // Solving the DI with multiple concrete implementations issue (IService -> Service*3)
+      // set multiple concrete registrations
+      services.AddTransient<MediaObjectService>();
+      services.AddTransient<MediaTypeService>();
+      services.AddTransient<MediaCatalogService>();
+      // manual mapping of the above types
+      services.AddTransient<ServiceResolver>(serviceProvider => key =>
+      {
+        switch (key)
+        {
+          case nameof(MediaObjectService):
+            return serviceProvider.GetService<MediaObjectService>();
+          case nameof(MediaTypeService):
+            return serviceProvider.GetService<MediaTypeService>();
+          case nameof(MediaCatalogService):
+            return serviceProvider.GetService<MediaCatalogService>();
+          default:
+            throw new KeyNotFoundException();
+        }
+      });
 
       services.AddControllers();
       services.AddSwaggerGen(c =>
