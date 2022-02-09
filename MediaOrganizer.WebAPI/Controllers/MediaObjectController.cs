@@ -49,10 +49,16 @@ namespace MediaOrganizer.WebAPI.Controllers
       return await _service.UpdateAsync<MediaObjectEdit>(id, model) ? Ok("Entity updated.") : BadRequest("Unable to update entity.");
     }
 
+    [HttpPatch("{objectId}/assignTo/{catalogId}")]
+    public async Task<IActionResult> Assign([FromRoute] int objectId, [FromRoute] int catalogId)
+    {
+      return await _service.Assign(objectId, catalogId) ? Ok("Assignment successful.") : BadRequest("Unable to assign.");
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-      return await _service.DeleteAsync(id) ? Ok($"Entity with id {id} deleted.") : BadRequest($"Entithy with id {id} could not be deleted.");
+      return await _service.DeleteAsync(id) ? Ok($"Entity with id {id} deleted.") : BadRequest($"Entity with id {id} could not be deleted.");
     }
   }
 }

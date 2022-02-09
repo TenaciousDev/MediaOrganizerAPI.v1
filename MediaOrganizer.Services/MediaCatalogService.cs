@@ -47,14 +47,17 @@ namespace MediaOrganizer.Services
 
     public async Task<T> GetByIdAsync<T>(int id) where T : class, new()
     {
-      var entity = await _context.MediaCatalogs.FindAsync(id);
+      var entity = await _context.MediaCatalogs
+      .Include(c => c.Members)
+      .ThenInclude(member => member.TypeOfMedia)
+      .FirstOrDefaultAsync(c => c.Id == id);
       if (entity is null) return default;
       MediaCatalogDetail detail = new MediaCatalogDetail
       {
         Id = entity.Id,
         Title = entity.Title,
         Description = entity.Description,
-        Members = (ICollection<MediaObject>)entity.Members.Select(m => new MediaObjectListItem
+        Members = entity.Members.Select(m => new MediaObjectListItem
         {
           Id = m.Id,
           Title = m.Title,
@@ -87,5 +90,9 @@ namespace MediaOrganizer.Services
       return await _context.SaveChangesAsync() == 1;
     }
 
+    public Task<bool> Assign(int entityId, int assignmentId)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

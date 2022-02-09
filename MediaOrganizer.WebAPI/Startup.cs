@@ -38,9 +38,9 @@ namespace MediaOrganizer.WebAPI
 
       // Solving the DI with multiple concrete implementations issue (IService -> Service*3)
       // set multiple concrete registrations
-      services.AddTransient<MediaObjectService>();
-      services.AddTransient<MediaTypeService>();
-      services.AddTransient<MediaCatalogService>();
+      services.AddScoped<MediaObjectService>();
+      services.AddScoped<MediaTypeService>();
+      services.AddScoped<MediaCatalogService>();
       // manual mapping of the above types
       services.AddTransient<ServiceResolver>(serviceProvider => key =>
       {

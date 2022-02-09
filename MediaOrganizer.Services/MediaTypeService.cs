@@ -77,5 +77,10 @@ namespace MediaOrganizer.Services
       _context.MediaTypes.Remove(entity);
       return await _context.SaveChangesAsync() == 1;
     }
+
+    Task<bool> IMediaService.Assign(int entityId, int assignmentId)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

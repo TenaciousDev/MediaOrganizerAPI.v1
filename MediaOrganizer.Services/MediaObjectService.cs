@@ -51,7 +51,7 @@ namespace MediaOrganizer.Services
 
     public async Task<T> GetByIdAsync<T>(int id) where T : class, new()
     {
-      var entity = await _context.MediaObjects.FindAsync(id);
+      var entity = await _context.MediaObjects.Include(o => o.TypeOfMedia).Include(o => o.Catalogs).FirstOrDefaultAsync(o => o.Id == id);
       if (entity is null) return default;
       MediaObjectDetail detail = new MediaObjectDetail
       {
@@ -60,7 +60,7 @@ namespace MediaOrganizer.Services
         Description = entity.Description,
         MediaTypeName = entity.TypeOfMedia.Title,
         MediaTypeDescription = entity.TypeOfMedia.Description,
-        Catalogs = (ICollection<MediaCatalog>)entity.Catalogs.Select(c => new MediaCatalogListItem
+        Catalogs = entity.Catalogs.Select(c => new MediaCatalogListItem
         {
           Id = c.Id,
           Title = c.Title,
@@ -85,6 +85,19 @@ namespace MediaOrganizer.Services
       var numberOfChanges = await _context.SaveChangesAsync();
       return numberOfChanges == 1;
     }
+
+    public async Task<bool> Assign(int entityId, int assignmentId)
+    {
+      var entity = await _context.MediaObjects.FindAsync(entityId);
+      if (entity is null) return false;
+      var assignment = await _context.MediaCatalogs.Include(c => c.Members).SingleOrDefaultAsync(c => c.Id == assignmentId);
+      if (assignment is null) return false;
+
+      assignment.Members.Add(entity);
+      return await _context.SaveChangesAsync() >= 1;
+
+    }
+
     public async Task<bool> DeleteAsync(int id)
     {
       var entity = await _context.MediaObjects.FindAsync(id);
