@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MediaOrganizer.Models.MediaObjectModels
 {
-  public class MediaObjectUpdate
+  public class MediaObjectEdit
   {
     public int MediaTypeId { get; set; }
     public string Title { get; set; }

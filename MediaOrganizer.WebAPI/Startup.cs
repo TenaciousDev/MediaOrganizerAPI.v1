@@ -36,7 +36,9 @@ namespace MediaOrganizer.WebAPI
       // also install package Microsoft.AspNetCore.Http.Abstractions
       // services.AddHttpContextAccessor();
 
-      services.AddScoped<IMediaService, MediaTypeService>();
+      services.AddTransient<IMediaService, MediaObjectService>();
+      services.AddTransient<IMediaService, MediaTypeService>();
+      // services.AddScoped<IMediaService, MediaCatalogService>();
 
       services.AddControllers();
       services.AddSwaggerGen(c =>

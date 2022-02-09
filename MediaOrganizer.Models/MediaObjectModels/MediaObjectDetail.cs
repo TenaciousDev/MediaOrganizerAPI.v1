@@ -13,6 +13,6 @@ namespace MediaOrganizer.Models.MediaObjectModels
     public string MediaTypeDescription { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public List<MediaCatalog> Catalogs { get; set; } = new List<MediaCatalog>();
+    public ICollection<MediaCatalog> Catalogs { get; set; } = new List<MediaCatalog>();
   }
 }

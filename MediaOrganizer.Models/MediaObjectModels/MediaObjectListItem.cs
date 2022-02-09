@@ -7,6 +7,7 @@ namespace MediaOrganizer.Models.MediaObjectModels
 {
   public class MediaObjectListItem
   {
+    public int Id { get; set; }
     public string MediaTypeName { get; set; }
     public string Title { get; set; }
     public int NumberOfCatalogs { get; set; }
